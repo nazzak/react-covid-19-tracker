@@ -6,6 +6,7 @@ import Map from "./components/Map"
 import Table from "./components/Table"
 import {sortData} from "./util"
 import LineGraph from "./components/LineGraph"
+import "leaflet/dist/leaflet.css"
 
 function App() {
 
@@ -13,6 +14,9 @@ function App() {
   const [country, setCountry] = useState('worldwide')
   const [countryInfo, setCountryInfo] = useState({})
   const [tableData, setTableData] = useState([])
+  const [mapCenter, setMapCenter] = useState({ lat: 34.80746, lng: -40.4796 })
+  const [mapZoom, setMapZoom] = useState(3)
+  const [mapCountries, setMapCountries] = useState([])
 
 
   //useEffect runs a piece of code based on a condition
@@ -23,7 +27,6 @@ function App() {
     const getCountriesData = async () => {
       const response = await fetch("https://disease.sh/v3/covid-19/countries")
       const data = await response.json()
-      console.log('YOOOO >>>>', data)
 
       const countries = data.map((item) => (
         {
@@ -33,6 +36,7 @@ function App() {
 
         const sortedData = sortData(data);
       setCountries(countries);
+      setMapCountries(data);
       setTableData(sortedData)
 
     };
@@ -66,6 +70,13 @@ function App() {
     const data = await info.json();
 
     setCountryInfo(data)
+
+    //secure the first run for worldwide
+    if(countryCode !== 'worldwide')
+    {
+    setMapCenter([data.countryInfo.lat, data.countryInfo.long])
+    setMapZoom(4)
+    }
   }
 
   return (
@@ -93,7 +104,7 @@ function App() {
           <InfoBox title="Recovered" value={countryInfo.todayRecovered} total={countryInfo.recovered} />
           <InfoBox title="Deaths" value={countryInfo.todayDeaths} total={countryInfo.deaths} />
         </div>
-        <Map />
+        <Map countries={mapCountries} casesType='cases' center={mapCenter} zoom={mapZoom} />
 
       </div>
 
