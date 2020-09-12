@@ -27,3 +27,9 @@ body {
   margin-bottom: "20px";
   justify-content: space-between;
 }
+
+@media (max-width: 990px) {
+  .app {
+    flex-direction: column;
+  }
+}
