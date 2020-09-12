@@ -3,13 +3,16 @@ import { MenuItem, FormControl, Select, Card, CardContent } from '@material-ui/c
 import './App.css';
 import InfoBox from './components/InfoBox';
 import Map from "./components/Map"
+import Table from "./components/Table"
+import {sortData} from "./util"
+import LineGraph from "./components/LineGraph"
 
 function App() {
 
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState('worldwide')
-  const [countryInfo, setCountryInfo] = useState({}
-  )
+  const [countryInfo, setCountryInfo] = useState({})
+  const [tableData, setTableData] = useState([])
 
 
   //useEffect runs a piece of code based on a condition
@@ -27,7 +30,10 @@ function App() {
           name: item.country,
           value: item.countryInfo.iso2,
         }));
+
+        const sortedData = sortData(data);
       setCountries(countries);
+      setTableData(sortedData)
 
     };
 
@@ -35,25 +41,25 @@ function App() {
   }, []);
 
   //get the first fetch when page loaded
-  useEffect(async () => {
-    await onCountryChange(
+  useEffect(() => {
+    onCountryChange(
       {
-          target: {
-            value: 'worldwide'
-          
+        target: {
+          value: 'worldwide'
+
         }
       }
     )
-  },[]);
+  }, []);
 
   const onCountryChange = async (event) => {
     const countryCode = event.target.value;
     setCountry(countryCode);
 
-    const url = countryCode === 'worldwide' ? 
-    "https://disease.sh/v3/covid-19/all" : 
-    // Use revers tick  to inject JS data
-    `https://disease.sh/v3/covid-19/countries/${countryCode}?strict=true`;
+    const url = countryCode === 'worldwide' ?
+      "https://disease.sh/v3/covid-19/all" :
+      // Use revers tick  to inject JS data
+      `https://disease.sh/v3/covid-19/countries/${countryCode}?strict=true`;
 
     //get all countries informations
     const info = await fetch(url)
@@ -92,11 +98,11 @@ function App() {
       </div>
 
       <Card className="app_right">
-        {/* Table */}
-        {/* Graph */}
         <CardContent>
           <h3>Live cases by country</h3>
+          <Table countries={tableData} />
           <h3>Worldwide new cases</h3>
+          <LineGraph />
         </CardContent>
       </Card>
 
