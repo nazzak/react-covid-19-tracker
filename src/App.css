@@ -20,11 +20,12 @@ body {
   justify-content: space-between;
 }
 
+.app__left {
+  flex: 0.9;
+}
+
 .app__stats {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: "20px";
   justify-content: space-between;
 }
 

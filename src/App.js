@@ -8,15 +8,7 @@ function App() {
 
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState('worldwide')
-  const [countryInfo, setCountryInfo] = useState(
-    {
-      cases: "",
-      todayCases: "",
-      deaths: "",
-      todayDeaths: "",
-      recovered: "",
-      todayRecovered: "",
-    }
+  const [countryInfo, setCountryInfo] = useState({}
   )
 
 
@@ -42,26 +34,32 @@ function App() {
     getCountriesData()
   }, []);
 
+  //get the first fetch when page loaded
+  useEffect(async () => {
+    await onCountryChange(
+      {
+          target: {
+            value: 'worldwide'
+          
+        }
+      }
+    )
+  },[]);
+
   const onCountryChange = async (event) => {
     const countryCode = event.target.value;
     setCountry(countryCode);
 
+    const url = countryCode === 'worldwide' ? 
+    "https://disease.sh/v3/covid-19/all" : 
+    // Use revers tick  to inject JS data
+    `https://disease.sh/v3/covid-19/countries/${countryCode}?strict=true`;
+
     //get all countries informations
-    const countryInfo = await fetch("https://disease.sh/v3/covid-19/countries/" + countryCode + "?strict=true")
-    const countryInfoJson = await countryInfo.json();
+    const info = await fetch(url)
+    const data = await info.json();
 
-    setCountryInfo(
-      {
-        cases: countryInfoJson.cases,
-        todayCases: countryInfoJson.todayCases,
-        deaths: countryInfoJson.deaths,
-        todayDeaths: countryInfoJson.todayDeaths,
-        recovered: countryInfoJson.recovered,
-        todayRecovered: countryInfoJson.todayRecovered,
-      }
-    )
-
-
+    setCountryInfo(data)
   }
 
   return (
@@ -95,11 +93,11 @@ function App() {
 
       <Card className="app_right">
         {/* Table */}
-      {/* Graph */}
-      <CardContent>
-        <h3>Live cases by country</h3>
-        <h3>Worldwide new cases</h3>
-      </CardContent>
+        {/* Graph */}
+        <CardContent>
+          <h3>Live cases by country</h3>
+          <h3>Worldwide new cases</h3>
+        </CardContent>
       </Card>
 
     </div>
