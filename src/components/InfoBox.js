@@ -4,11 +4,8 @@ import './InfoBox.css'
 
 const InfoBox = (props) => {
     return (
-        <Card className="infoBox">
+        <Card onClick={props.onClick} className={`infoBox ${props.active && 'infoBox--selected'} ${props.isRed && 'infoBox--isred'}`}>
             <CardContent>
-                {/* Title : Coronavirus cases*/}
-                {/* +120k : Number of cases*/}
-                {/* 1.2M Total*/}
                 <Typography className='infoBox__title' color="textSecondary">
                     {props.title}
                 </Typography>

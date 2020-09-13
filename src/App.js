@@ -17,6 +17,7 @@ function App() {
   const [mapCenter, setMapCenter] = useState({ lat: 34.80746, lng: -40.4796 })
   const [mapZoom, setMapZoom] = useState(3)
   const [mapCountries, setMapCountries] = useState([])
+  const [casesType, setCasesType] =useState("cases")
 
 
   //useEffect runs a piece of code based on a condition
@@ -84,7 +85,7 @@ function App() {
       <div className='app__left'>
         <div className="app__header">
           <h1>COVID 19 TRACKER</h1>
-          <FormControl className="app_dropdown">
+          <FormControl className="app__dropdown">
             <Select
               variant="outlined"
               value={country}
@@ -100,11 +101,11 @@ function App() {
         </div>
 
         <div className="app__stats">
-          <InfoBox title="Coronavirus cases" value={prettyPrintStat(countryInfo.todayCases)} total={prettyPrintStat(countryInfo.cases)} />
-          <InfoBox title="Recovered" value={prettyPrintStat(countryInfo.todayRecovered)} total={prettyPrintStat(countryInfo.recovered)} />
-          <InfoBox title="Deaths" value={prettyPrintStat(countryInfo.todayDeaths)} total={prettyPrintStat(countryInfo.deaths)} />
+          <InfoBox isRed active={casesType === "cases"} onClick={e => setCasesType('cases')} title="Coronavirus cases" value={prettyPrintStat(countryInfo.todayCases)} total={prettyPrintStat(countryInfo.cases)} />
+          <InfoBox active={casesType === "recovered"} onClick={e => setCasesType('recovered')} title="Recovered" value={prettyPrintStat(countryInfo.todayRecovered)} total={prettyPrintStat(countryInfo.recovered)} />
+          <InfoBox isRed active={casesType === "deaths"} onClick={e => setCasesType('deaths')} title="Deaths" value={prettyPrintStat(countryInfo.todayDeaths)} total={prettyPrintStat(countryInfo.deaths)} />
         </div>
-        <Map countries={mapCountries} casesType='cases' center={mapCenter} zoom={mapZoom} />
+        <Map casesType={casesType} countries={mapCountries} center={mapCenter} zoom={mapZoom} />
 
       </div>
 
@@ -112,8 +113,8 @@ function App() {
         <CardContent>
           <h3>Live cases by country</h3>
           <Table countries={tableData} />
-          <h3>Worldwide new cases</h3>
-          <LineGraph />
+          <h3>Worldwide new {casesType}</h3>
+          <LineGraph className="app__graph" casesType={casesType}/>
         </CardContent>
       </Card>
 
