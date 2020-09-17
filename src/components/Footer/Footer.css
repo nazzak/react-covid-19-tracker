@@ -1,0 +1,9 @@
+.footer {
+    height: 100px;
+    background-color: inherit;
+}
+
+.footer > h3 {
+    text-align: center;
+    color: grey;
+}
